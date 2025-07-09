@@ -30,6 +30,7 @@ export default function RootLayout({
           "min-h-screen bg-dark-300 font-sans antialiased",
           FontSans.variable
         )}
+        suppressHydrationWarning
       >
         <ThemeProvider attribute="class" defaultTheme="dark">
           {children}

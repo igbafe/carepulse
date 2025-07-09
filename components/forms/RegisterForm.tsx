@@ -39,44 +39,63 @@ const RegisterForm = ({ user }: { user: User }) => {
     },
   });
 
+  const onSubmit = async (values: z.infer<typeof PatientFormValidation>) => {
+    setisLoading(true);
 
-  async function onSubmit(values: z.infer<typeof PatientFormValidation>) {
-    setisLoading(true); 
+    // Store file info in form data as
     let formData;
-    console.log(formData)
-    if (values.identificationDocument && values.identificationDocument.length > 0) {
+    if (
+      values.identificationDocument &&
+      values.identificationDocument?.length > 0
+    ) {
       const blobFile = new Blob([values.identificationDocument[0]], {
         type: values.identificationDocument[0].type,
       });
-  
+
       formData = new FormData();
       formData.append("blobFile", blobFile);
       formData.append("fileName", values.identificationDocument[0].name);
     }
-  
-  
+
     try {
-      const patientData = {
-        ...values,
+      const patient = {
         userId: user.$id,
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
         birthDate: new Date(values.birthDate),
-        identificationDocument: formData,
+        gender: values.gender,
+        address: values.address,
+        occupation: values.occupation,
+        emergencyContactName: values.emergencyContactName,
+        emergencyContactNumber: values.emergencyContactNumber,
+        primaryPhysician: values.primaryPhysician,
+        insuranceProvider: values.insuranceProvider,
+        insurancePolicyNumber: values.insurancePolicyNumber,
+        allergies: values.allergies,
+        currentMedication: values.currentMedication,
+        familyMedicalHistory: values.familyMedicalHistory,
+        pastMedicalHistory: values.pastMedicalHistory,
+        identificationType: values.identificationType,
+        identificationNumber: values.identificationNumber,
+        identificationDocument: values.identificationDocument
+          ? formData
+          : undefined,
+        privacyConsent: values.privacyConsent,
       };
-  
-      //@ts-ignore
-      const patient = await registerPatient(patientData);
-  
-      if (patient) {
+
+      const newPatient = await registerPatient(patient);
+
+      if (newPatient) {
         router.push(`/patients/${user.$id}/new-appointment`);
       }
     } catch (error) {
-      console.error("Error during patient registration:", error);
-    } finally {
-      setisLoading(false); // Always reset loading state
+      console.log(error);
     }
-  }
-  
 
+    setisLoading(false);
+  };
+ 
   return (
     <Form {...form}>
       <form
@@ -101,7 +120,6 @@ const RegisterForm = ({ user }: { user: User }) => {
           iconSrc="/assets/icons/user.svg"
           iconAlt="user"
         />
-
         <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
             fieldType={FormFieldType.INPUT}
@@ -121,7 +139,6 @@ const RegisterForm = ({ user }: { user: User }) => {
             placeholder="(234) 8106272828"
           />
         </div>
-
         <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
             fieldType={FormFieldType.DATE_PICKER}
@@ -158,7 +175,6 @@ const RegisterForm = ({ user }: { user: User }) => {
             )}
           />
         </div>
-
         <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
             fieldType={FormFieldType.INPUT}
@@ -175,7 +191,6 @@ const RegisterForm = ({ user }: { user: User }) => {
             placeholder="Software Engineer"
           />
         </div>
-
         <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
             fieldType={FormFieldType.INPUT}
@@ -193,17 +208,15 @@ const RegisterForm = ({ user }: { user: User }) => {
             placeholder="(234) 8106272828"
           />
         </div>
-
         <section className="mb-12 space-y-6">
           <div className="mb-9 space-y-1">
             <h2 className="sub-header">Medical Information</h2>
           </div>
         </section>
-
         <CustomFormField
           fieldType={FormFieldType.SELECT}
           control={form.control}
-          name="PrimaryPhysician"
+          name="primaryPhysician"
           label="Primary Physician"
           placeholder="Select a physician"
         >
@@ -222,7 +235,6 @@ const RegisterForm = ({ user }: { user: User }) => {
             </SelectItem>
           ))}
         </CustomFormField>
-
         <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
             fieldType={FormFieldType.INPUT}
@@ -314,13 +326,11 @@ const RegisterForm = ({ user }: { user: User }) => {
             )}
           />
         </div>
-
         <section className="mb-12 space-y-6">
           <div className="mb-9 space-y-1">
             <h2 className="sub-header">Consent and Privacy</h2>
           </div>
         </section>
-
         <CustomFormField
           fieldType={FormFieldType.CHECKBOX}
           control={form.control}
@@ -337,9 +347,10 @@ const RegisterForm = ({ user }: { user: User }) => {
           fieldType={FormFieldType.CHECKBOX}
           control={form.control}
           name="privacyConsent"
-          label="I consent to treatment"
+          label="I consent to privacy policy"
         />
         <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
+       
       </form>
     </Form>
   );

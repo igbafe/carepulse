@@ -4,10 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-
-
 const Register = async ({ params: { userId } }: SearchParamProps) => {
   const user = await getUser(userId);
+ 
   return (
     <div className="flex h-screen max-h-screen">
       {/* OTP Verification | PASSKEY MODAL */}
@@ -23,10 +22,7 @@ const Register = async ({ params: { userId } }: SearchParamProps) => {
 
           <RegisterForm user={user} />
 
-          <p className="copyright py-12">
-            {" "}
-            © 2024 CarePulse
-          </p>
+          <p className="copyright py-12"> © 2024 CarePulse</p>
         </div>
       </section>
 
