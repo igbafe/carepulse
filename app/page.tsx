@@ -7,8 +7,8 @@ export default function Home() {
   return (
     <div className="flex h-screen max-h-screen">
       {/* OTP Verification | PASSKEY MODAL */}
-      <section className="remove-scrollbar container my-auto">
-        <div className="sub-container max-w-[496px]">
+      <section className="remove-scrollbar container my-auto flex items-center justify-center">
+        <div className="sub-container max-w-[496px] py-20">
           <Image
             src="/assets/icons/logo-full.svg"
             alt="patient"

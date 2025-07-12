@@ -10,8 +10,8 @@ const Register = async ({ params: { userId } }: SearchParamProps) => {
   return (
     <div className="flex h-screen max-h-screen">
       {/* OTP Verification | PASSKEY MODAL */}
-      <section className="remove-scrollbar container">
-        <div className="sub-container max-w-[860px] flex-1 flex-col py-10">
+      <section className="remove-scrollbar container flex items-center justify-center">
+        <div className="sub-container max-w-[860px] flex-1 flex-col py-20">
           <Image
             src="/assets/icons/logo-full.svg"
             alt="patient"

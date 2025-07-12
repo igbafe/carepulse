@@ -64,6 +64,20 @@ export const getUser = async (userId: string) => {
   }
 };
 
+export const getPatient = async (userId: string) => {
+  try {
+    const patients = await databases.listDocuments(
+      DATABASE_ID!,
+      PATIENT_COLLECTION_ID!,
+      [Query.equal("userId", [userId])]
+    );
+    return parseStringify(patients?.documents[0]);
+  } catch (error) {
+    console.error("Error fetching user by ID:", error);
+    throw new Error("Failed to fetch user");
+  }
+};
+
 // Function to register a patient, including file upload for documents
 export const registerPatient = async ({
   identificationDocument,
@@ -82,12 +96,6 @@ export const registerPatient = async ({
       // Upload the file and store it
       file = await storage.createFile(BUCKET_ID!, ID.unique(), inputFile);
     }
-
-    // Log the file details
-    console.log({
-      identificationDocumentId: file?.$id || null,
-      identificationDocumentUrl: `${ENDPOINT}/storage/buckets/${BUCKET_ID}/files/${file?.$id}/view/?project=${PROJECT_ID}`,
-    });
 
     // Create the patient document in the database
     const newPatient = await databases.createDocument(
