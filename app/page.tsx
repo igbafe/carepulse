@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div className="flex h-screen max-h-screen">
       {/* OTP Verification | PASSKEY MODAL */}
-      <section className="remove-scrollbar container my-auto flex items-center justify-center">
+      <section className="remove-scrollbar h-screen container my-auto flex items-center justify-center">
         <div className="sub-container max-w-[496px] py-20">
           <Image
             src="/assets/icons/logo-full.svg"
@@ -19,7 +19,7 @@ export default function Home() {
 
           <PatientForm />
 
-          <div className="text-14-regular mt-20 flex justify-between">
+          <div className="text-14-regular pb-12 mt-20 flex justify-between">
             <p className="justify-items-end text-dark-600 xl:text-left">
               {" "}
               © 2024 CarePulse
@@ -36,7 +36,7 @@ export default function Home() {
         height={1000}
         width={1000}
         alt="patient"
-        className="side-img max-w-[50%]"
+        className="side-img  max-w-[50%]"
       />
     </div>
   );
