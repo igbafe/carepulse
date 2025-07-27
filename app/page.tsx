@@ -1,12 +1,14 @@
 import PatientForm from "@/components/forms/PatientForm";
+import PasskeyModal from "@/components/PasskeyModal";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Home() {
+export default function Home({ searchParams }: SearchParamProps) {
+  const isAdmin = searchParams?.admin === "true";
   return (
     <div className="flex h-screen max-h-screen">
-      {/* OTP Verification | PASSKEY MODAL */}
+      {isAdmin && <PasskeyModal />}
       <section className="remove-scrollbar h-screen container my-auto flex items-center justify-center">
         <div className="sub-container max-w-[496px] py-20">
           <Image
@@ -14,12 +16,12 @@ export default function Home() {
             alt="patient"
             width={1000}
             height={1000}
-            className="mb-10 h-10 w-fit"
+            className="mb-5 h-10 w-fit"
           />
 
           <PatientForm />
 
-          <div className="text-14-regular pb-12 mt-20 flex justify-between">
+          <div className="text-14-regular pb-12 mt-10 flex justify-between">
             <p className="justify-items-end text-dark-600 xl:text-left">
               {" "}
               © 2024 CarePulse
@@ -36,7 +38,7 @@ export default function Home() {
         height={1000}
         width={1000}
         alt="patient"
-        className="side-img  max-w-[50%]"
+        className="side-img max-w-[50%]"
       />
     </div>
   );
