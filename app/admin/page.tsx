@@ -1,11 +1,13 @@
+import { DataTable } from "@/components/table/DataTable";
 import StatsCard from "@/components/StatsCard";
 import { getRecentAppointments } from "@/lib/actions/appointment.actions";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { columns, Payment } from "@/components/table/columns";
 
 const Admin = async () => {
-    const appointments = await getRecentAppointments();
+  const appointments = await getRecentAppointments();
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
       <header className="admin-header">
@@ -49,6 +51,8 @@ const Admin = async () => {
             icon="/assets/icons/cancelled.svg"
           />
         </section>
+
+        <DataTable columns={columns} data={appointments.documents} />
       </main>
     </div>
   );
