@@ -9,7 +9,7 @@ import { Button } from "../ui/button";
 import CustomFormField from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { useState } from "react";
-import {  getAppointmentSchema } from "@/lib/validation";
+import { getAppointmentSchema } from "@/lib/validation";
 import { useRouter } from "next/navigation";
 import { createUser } from "@/lib/actions/patients.actions";
 import { FormFieldType } from "./PatientForm";
@@ -18,15 +18,20 @@ import { SelectItem } from "../ui/select";
 import Image from "next/image";
 import App from "next/app";
 import { createAppointment } from "@/lib/actions/appointment.actions";
+import { Appointment } from "@/types/appwrite.types";
 
 const AppointmentForm = ({
   type,
   userId,
   patientId,
+  appointment,
+  setOpen,
 }: {
   type: "create" | "cancel" | "schedule";
   userId?: string;
   patientId?: string;
+  appointment?: Appointment;
+  setOpen: (open: boolean) => void;
 }) => {
   const router = useRouter();
   const [isLoading, setisLoading] = useState(false);
@@ -46,7 +51,7 @@ const AppointmentForm = ({
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof AppointmentFormValidation>) {
     setisLoading(true);
-    console.log('error 1')
+    console.log("error 1");
 
     let status;
     switch (type) {
@@ -72,16 +77,18 @@ const AppointmentForm = ({
           status: status as Status,
         };
         const appointment = await createAppointment(appointmentData);
-        console.log('error 2')
+        console.log("error 2");
         if (appointment) {
           form.reset();
-          router.push(`/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`);
+          router.push(
+            `/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`
+          );
         }
       }
       setisLoading(false);
     } catch (error) {
       console.log(error);
-       setisLoading(false);
+      setisLoading(false);
     }
   }
 
