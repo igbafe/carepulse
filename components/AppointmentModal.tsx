@@ -18,7 +18,7 @@ const AppointmentModal = ({
   userId,
   appointment,
 }: {
-  type: "schedule" | "cancel";
+  type: "create" | "schedule" | "cancel";
   patientId: string;
   userId: string;
   appointment?: Appointment;

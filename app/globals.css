@@ -247,7 +247,7 @@
   }
 
   .shad-table-row {
-    @apply border-b border-dark-400 text-light-200 !important;
+    @apply border-b border-dark-400 text-light-200  !important;
   }
 
   .shad-otp {
