@@ -5,10 +5,30 @@ export const UserFormValidation = z.object({
     .string()
     .min(2, "Name must be at least 2 characters")
     .max(50, "Name must be at most 50 characters"),
+
   email: z.string().email("Invalid email address"),
+
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(72, "Password must be at most 72 characters")
+    .regex(/[A-Z]/, "Password must include at least one uppercase letter (A–Z)")
+    .regex(/[a-z]/, "Password must include at least one lowercase letter (a–z)")
+    .regex(/[0-9]/, "Password must include at least one number (0–9)")
+    .regex(/[^A-Za-z0-9]/, "Password must include at least one symbol (e.g. !@#$%)")
+    .refine((v) => !/\s/.test(v), "Password must not contain spaces"),
+
   phone: z
     .string()
     .refine((phone) => /^\+\d{10,15}$/.test(phone), "Invalid phone number"),
+});
+
+export const LoginFormValidation = z.object({
+  email: z.string().email("Invalid email address"),
+
+  password: z
+    .string()
+    .min(1, "Password is required"), 
 });
 
 export const PatientFormValidation = z.object({

@@ -8,7 +8,7 @@ import { Form } from "@/components/ui/form";
 import CustomFormField from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
 import { useState } from "react";
-import { UserFormValidation } from "@/lib/validation";
+import { LoginFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
 import { createUser } from "@/lib/actions/patients.actions";
 
@@ -23,31 +23,27 @@ export enum FormFieldType {
   PASSWORD = "password",
 }
 
-const PatientForm = () => {
+const LoginForm = () => {
   const router = useRouter();
   const [isLoading, setisLoading] = useState(false);
   // 1. Define your form.
-  const form = useForm<z.infer<typeof UserFormValidation>>({
-    resolver: zodResolver(UserFormValidation),
+  const form = useForm<z.infer<typeof LoginFormValidation>>({
+    resolver: zodResolver(LoginFormValidation),
     defaultValues: {
-      name: "",
       email: "",
-      phone: "",
       password: "",
     },
   });
 
   // 2. Define a submit handler.
   async function onSubmit({
-    name,
     email,
-    phone,
     password,
-  }: z.infer<typeof UserFormValidation>) {
+  }: z.infer<typeof LoginFormValidation>) {
     setisLoading(true);
 
     try {
-      const userData = { name, email, phone, password };
+      const userData = {  email, password };
 
       const user = await createUser(userData);
 
@@ -67,28 +63,11 @@ const PatientForm = () => {
         <CustomFormField
           fieldType={FormFieldType.INPUT}
           control={form.control}
-          name="name"
-          label="Full name"
-          placeholder="John Doe"
-          iconSrc="/assets/icons/user.svg"
-          iconAlt="user"
-        />
-        <CustomFormField
-          fieldType={FormFieldType.INPUT}
-          control={form.control}
           name="email"
           label="Email"
           placeholder="peter@gmail.com"
           iconSrc="/assets/icons/email.svg"
           iconAlt="email"
-        />
-
-        <CustomFormField
-          fieldType={FormFieldType.PHONE_INPUT}
-          control={form.control}
-          name="phone"
-          label="Phone Number"
-          placeholder="(234) 8106272828"
         />
         <CustomFormField
           control={form.control}
@@ -103,4 +82,4 @@ const PatientForm = () => {
   );
 };
 
-export default PatientForm;
+export default LoginForm;
