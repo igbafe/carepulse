@@ -1,6 +1,6 @@
 "use server";
 
-import { Account, ID, Query } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
 import {
   BUCKET_ID,
   DATABASE_ID,
@@ -53,18 +53,7 @@ export const createUser = async (user: CreateUserParams) => {
   }
 };
 
-export const loginUser = async (email: string, password: string) => {
-  try {
-    // Create a session for the user (login)
-    const session = await users.createEmailSession(email, password);
 
-    console.log("User logged in successfully:", session);
-    return session; // contains sessionId, userId, and expiry info
-  } catch (error: any) {
-    console.error("Login failed:", error);
-    throw new Error(error?.message || "Failed to login");
-  }
-};
 
 // Function to retrieve user data by user ID
 export const getUser = async (userId: string) => {

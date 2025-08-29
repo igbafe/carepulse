@@ -1,3 +1,7 @@
+"use client";
+
+// import { useState } from "react";
+// import LoginForm from "@/components/forms/LoginForm";
 import PatientForm from "@/components/forms/PatientForm";
 import PasskeyModal from "@/components/PasskeyModal";
 import Image from "next/image";
@@ -5,6 +9,8 @@ import Link from "next/link";
 
 export default function Home({ searchParams }: SearchParamProps) {
   const isAdmin = searchParams?.admin === "true";
+  // const [showLogin, setShowLogin] = useState(false);
+
   return (
     <div className="flex h-screen max-h-screen">
       {isAdmin && <PasskeyModal />}
@@ -18,11 +24,37 @@ export default function Home({ searchParams }: SearchParamProps) {
             className="mb-5 h-10 w-fit"
           />
 
+          {/* Toggle between Signup and Login */}
+          {/* {showLogin ? <LoginForm /> : <PatientForm />} */}
           <PatientForm />
+
+          {/* Toggle link */}
+          {/* <div className="mt-6 text-center">
+            {showLogin ? (
+              <p className="text-sm text-dark-600">
+                Don’t have an account?{" "}
+                <button
+                  onClick={() => setShowLogin(false)}
+                  className="text-green-600 hover:underline"
+                >
+                  Sign up here
+                </button>
+              </p>
+            ) : (
+              <p className="text-sm text-dark-600">
+                Already have an account?{" "}
+                <button
+                  onClick={() => setShowLogin(true)}
+                  className="text-green-600 hover:underline"
+                >
+                  Login here
+                </button>
+              </p>
+            )}
+          </div> */}
 
           <div className="text-14-regular pb-12 mt-10 flex justify-between">
             <p className="justify-items-end text-dark-600 xl:text-left">
-              {" "}
               © 2024 CarePulse
             </p>
             <Link href="/?admin=true" className="text-green-500">

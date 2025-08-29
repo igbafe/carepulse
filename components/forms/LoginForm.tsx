@@ -10,7 +10,8 @@ import SubmitButton from "../SubmitButton";
 import { useState } from "react";
 import { LoginFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
-import { createUser } from "@/lib/actions/patients.actions";
+import { loginUser } from "@/lib/actions/login.actions";
+import LoadingOverlay from "../loadingOverlay";
 
 export enum FormFieldType {
   INPUT = "input",
@@ -26,6 +27,7 @@ export enum FormFieldType {
 const LoginForm = () => {
   const router = useRouter();
   const [isLoading, setisLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   // 1. Define your form.
   const form = useForm<z.infer<typeof LoginFormValidation>>({
     resolver: zodResolver(LoginFormValidation),
@@ -41,44 +43,54 @@ const LoginForm = () => {
     password,
   }: z.infer<typeof LoginFormValidation>) {
     setisLoading(true);
+    console.log("Trying login with:", email, password);
 
     try {
-      const userData = {  email, password };
-
-      const user = await createUser(userData);
+      // Pass email and password as separate arguments
+      const userData = { email, password };
+      const user = await loginUser(userData);
 
       if (user) router.push(`/patients/${user.$id}/register`);
     } catch (error) {
+      setisLoading(false);
       console.log(error);
+      setError("Invalid email or password");
     }
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex-1">
-        <section className="mb-8 space-y-4">
-          <h1 className="header">Hi there 👋</h1>
-          <p className="text-dark-700">Schedule your first appiontment</p>
-        </section>
-        <CustomFormField
-          fieldType={FormFieldType.INPUT}
-          control={form.control}
-          name="email"
-          label="Email"
-          placeholder="peter@gmail.com"
-          iconSrc="/assets/icons/email.svg"
-          iconAlt="email"
-        />
-        <CustomFormField
-          control={form.control}
-          fieldType={FormFieldType.PASSWORD}
-          name="password"
-          label="Password"
-          placeholder="Enter your password"
-        />
-        <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
-      </form>
-    </Form>
+    <>
+      {isLoading && <LoadingOverlay />}
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-6 flex-1"
+        >
+          <section className="mb-8 space-y-4">
+            <h1 className="header">Hi there 👋</h1>
+            <p className="text-dark-700">Schedule your first appiontment</p>
+          </section>
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name="email"
+            label="Email"
+            placeholder="peter@gmail.com"
+            iconSrc="/assets/icons/email.svg"
+            iconAlt="email"
+          />
+          <CustomFormField
+            control={form.control}
+            fieldType={FormFieldType.PASSWORD}
+            name="password"
+            label="Password"
+            placeholder="Enter your password"
+          />
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+          <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
+        </form>
+      </Form>
+    </>
   );
 };
 

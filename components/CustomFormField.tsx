@@ -40,6 +40,7 @@ interface CustomProps {
 type E164Number = string;
 
 const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
+  const [showPassword, setShowPassword] = useState(false);
   const {
     fieldType,
     iconSrc,
@@ -72,8 +73,6 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
         </div>
       );
     case FormFieldType.PASSWORD: {
-      const [showPassword, setShowPassword] = useState(false);
-
       return (
         <div className="flex items-center rounded-md border border-dark-500 bg-dark-400 relative">
           {/* Padlock icon on the left */}
