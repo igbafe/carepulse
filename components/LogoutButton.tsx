@@ -83,17 +83,24 @@ const LogoutButton = () => {
 
   return (
     <div className="fixed right-6 top-6 z-50 flex flex-col items-end gap-2">
-      <Button
-        type="button"
-        onClick={handleLogout}
-        disabled={isLoading}
-        className="shad-danger-btn min-w-[120px]"
-      >
-        <LogOut className="size-4" />
-        {isLoading ? "Logging out..." : "Logout"}
-      </Button>
+      <div className="rounded-2xl border border-dark-500 bg-dark-200/95 p-2 shadow-lg backdrop-blur-sm">
+        <Button
+          type="button"
+          onClick={handleLogout}
+          disabled={isLoading}
+          variant="ghost"
+          className="group min-w-[132px] rounded-xl border border-transparent bg-dark-400 px-4 text-light-200 hover:border-green-500/30 hover:bg-dark-300 hover:text-green-500"
+        >
+          <LogOut className="size-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
+          {isLoading ? "Logging out..." : "Logout"}
+        </Button>
+      </div>
 
-      {error && <p className="max-w-xs text-right text-sm text-red-500">{error}</p>}
+      {error && (
+        <p className="max-w-xs rounded-xl border border-red-600/40 bg-red-600/10 px-3 py-2 text-right text-sm text-red-500">
+          {error}
+        </p>
+      )}
     </div>
   );
 };
