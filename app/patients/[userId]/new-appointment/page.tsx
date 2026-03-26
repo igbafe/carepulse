@@ -1,11 +1,17 @@
 import AppointmentForm from "@/components/forms/Appointment";
 import { getPatient } from "@/lib/actions/patients.actions";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
 export default async function NewAppointment({
   params: { userId },
 }: SearchParamProps) {
   const patient = await getPatient(userId);
+
+  if (!patient) {
+    redirect(`/patients/${userId}/register`);
+  }
+
   return (
     <div className="flex h-screen max-h-screen">
       {/* OTP Verification | PASSKEY MODAL */}

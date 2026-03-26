@@ -14,42 +14,30 @@ import {
 import { parseStringify } from "../utils";
 import { InputFile } from "node-appwrite/file";
 
+const getCreateUserErrorMessage = (error: any) => {
+  if (error?.code === 409) {
+    return "An account with this email or phone already exists. Please log in instead.";
+  }
+
+  return error?.message || "Failed to create user";
+};
+
 // Function to create a user
 export const createUser = async (user: CreateUserParams) => {
   try {
-    // Attempt to create the user
     const newUser = await users.create(
       ID.unique(),
       user.email,
       user.phone,
-      undefined,
+      user.password,
       user.name
     );
 
-    // Log the newly created user object
     console.log("New User Created:", newUser);
-
-    // Return the new user data after parsing
     return parseStringify(newUser);
   } catch (error: any) {
-    // Log the error with additional details
     console.error("Error creating user:", error);
-
-    // If it's a conflict error (user already exists), retrieve the existing user
-    if (error?.code === 409) {
-      try {
-        const documents = await users.list([Query.equal("email", [user.email])]);
-        console.log("Existing User Found:", documents?.users[0]);
-
-        return documents?.users[0]; // Return the existing user if found
-      } catch (listError) {
-        console.error("Error fetching existing user:", listError);
-        throw new Error("Failed to fetch existing user after conflict");
-      }
-    }
-
-    // Throw a generic error if the user creation fails for any other reason
-    throw new Error("Failed to create user");
+    throw new Error(getCreateUserErrorMessage(error));
   }
 };
 
@@ -73,7 +61,10 @@ export const getPatient = async (userId: string) => {
       PATIENT_COLLECTION_ID!,
       [Query.equal("userId", [userId])]
     );
-    return parseStringify(patients?.documents[0]);
+
+    const patient = patients?.documents[0];
+
+    return patient ? parseStringify(patient) : null;
   } catch (error) {
     console.error("Error fetching user by ID:", error);
     throw new Error("Failed to fetch user");

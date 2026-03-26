@@ -1,17 +1,17 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Form } from "@/components/ui/form";
-import CustomFormField from "../CustomFormField";
-import SubmitButton from "../SubmitButton";
-import { useState } from "react";
 import { UserFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
 import { createUser } from "@/lib/actions/patients.actions";
+import CustomFormField from "../CustomFormField";
 import LoadingOverlay from "../loadingOverlay";
+import SubmitButton from "../SubmitButton";
 
 export enum FormFieldType {
   INPUT = "input",
@@ -27,7 +27,8 @@ export enum FormFieldType {
 const PatientForm = () => {
   const router = useRouter();
   const [isLoading, setisLoading] = useState(false);
-  // 1. Define your form.
+  const [error, setError] = useState<string | null>(null);
+
   const form = useForm<z.infer<typeof UserFormValidation>>({
     resolver: zodResolver(UserFormValidation),
     defaultValues: {
@@ -38,23 +39,29 @@ const PatientForm = () => {
     },
   });
 
-  // 2. Define a submit handler.
   async function onSubmit({
     name,
     email,
     phone,
     password,
   }: z.infer<typeof UserFormValidation>) {
+    setError(null);
     setisLoading(true);
 
     try {
-      const userData = { name, email, phone, password };
+      const user = await createUser({ name, email, phone, password });
 
-      const user = await createUser(userData);
-
-      if (user) router.push(`/patients/${user.$id}/register`);
+      if (user) {
+        router.push(`/patients/${user.$id}/register`);
+      }
     } catch (error) {
       console.log(error);
+      setisLoading(false);
+      setError(
+        error instanceof Error
+          ? error.message
+          : "We couldn't create your account. Please try again."
+      );
     }
   }
 
@@ -67,9 +74,12 @@ const PatientForm = () => {
           className="space-y-6 flex-1"
         >
           <section className="mb-8 space-y-4">
-            <h1 className="header">Hi there 👋</h1>
-            <p className="text-dark-700">Schedule your first appiontment</p>
+            <h1 className="header">Hi there</h1>
+            <p className="text-dark-700">
+              Create your account to book care in minutes.
+            </p>
           </section>
+
           <CustomFormField
             fieldType={FormFieldType.INPUT}
             control={form.control}
@@ -79,6 +89,7 @@ const PatientForm = () => {
             iconSrc="/assets/icons/user.svg"
             iconAlt="user"
           />
+
           <CustomFormField
             fieldType={FormFieldType.INPUT}
             control={form.control}
@@ -96,6 +107,7 @@ const PatientForm = () => {
             label="Phone Number"
             placeholder="(234) 8106272828"
           />
+
           <CustomFormField
             control={form.control}
             fieldType={FormFieldType.PASSWORD}
@@ -103,7 +115,10 @@ const PatientForm = () => {
             label="Password"
             placeholder="Enter your password"
           />
-          <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
+
+          {error && <p className="text-sm text-red-500">{error}</p>}
+
+          <SubmitButton isLoading={isLoading}>Create Account</SubmitButton>
         </form>
       </Form>
     </>

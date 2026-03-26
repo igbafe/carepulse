@@ -1,7 +1,8 @@
 "use client";
 
-// import { useState } from "react";
-// import LoginForm from "@/components/forms/LoginForm";
+import { useState } from "react";
+
+import LoginForm from "@/components/forms/LoginForm";
 import PatientForm from "@/components/forms/PatientForm";
 import PasskeyModal from "@/components/PasskeyModal";
 import Image from "next/image";
@@ -9,7 +10,7 @@ import Link from "next/link";
 
 export default function Home({ searchParams }: SearchParamProps) {
   const isAdmin = searchParams?.admin === "true";
-  // const [showLogin, setShowLogin] = useState(false);
+  const [showLogin, setShowLogin] = useState(searchParams?.mode === "login");
 
   return (
     <div className="flex h-screen max-h-screen">
@@ -24,16 +25,14 @@ export default function Home({ searchParams }: SearchParamProps) {
             className="mb-5 h-10 w-fit"
           />
 
-          {/* Toggle between Signup and Login */}
-          {/* {showLogin ? <LoginForm /> : <PatientForm />} */}
-          <PatientForm />
+          {showLogin ? <LoginForm /> : <PatientForm />}
 
-          {/* Toggle link */}
-          {/* <div className="mt-6 text-center">
+          <div className="mt-6 text-center">
             {showLogin ? (
               <p className="text-sm text-dark-600">
-                Don’t have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <button
+                  type="button"
                   onClick={() => setShowLogin(false)}
                   className="text-green-600 hover:underline"
                 >
@@ -44,18 +43,19 @@ export default function Home({ searchParams }: SearchParamProps) {
               <p className="text-sm text-dark-600">
                 Already have an account?{" "}
                 <button
+                  type="button"
                   onClick={() => setShowLogin(true)}
                   className="text-green-600 hover:underline"
                 >
-                  Login here
+                  Log in here
                 </button>
               </p>
             )}
-          </div> */}
+          </div>
 
           <div className="text-14-regular pb-12 mt-10 flex justify-between">
             <p className="justify-items-end text-dark-600 xl:text-left">
-              © 2024 CarePulse
+              (c) 2024 CarePulse
             </p>
             <Link href="/?admin=true" className="text-green-500">
               Admin
