@@ -15,15 +15,28 @@ import { parseStringify } from "../utils";
 import { InputFile } from "node-appwrite/file";
 
 const getCreateUserErrorMessage = (error: any) => {
-  if (error?.code === 409) {
+  const message =
+    typeof error?.message === "string" ? error.message.toLowerCase() : "";
+
+  if (
+    error?.code === 409 ||
+    error?.type === "user_already_exists" ||
+    message.includes("already exists")
+  ) {
     return "An account with this email or phone already exists. Please log in instead.";
   }
 
-  return error?.message || "Failed to create user";
+  return error?.message || "We couldn't create your account. Please try again.";
 };
 
+type CreateUserResult =
+  | { success: true; user: User }
+  | { success: false; error: string };
+
 // Function to create a user
-export const createUser = async (user: CreateUserParams) => {
+export const createUser = async (
+  user: CreateUserParams
+): Promise<CreateUserResult> => {
   try {
     const newUser = await users.create(
       ID.unique(),
@@ -33,15 +46,12 @@ export const createUser = async (user: CreateUserParams) => {
       user.name
     );
 
-    console.log("New User Created:", newUser);
-    return parseStringify(newUser);
+    return { success: true, user: parseStringify(newUser) as User };
   } catch (error: any) {
     console.error("Error creating user:", error);
-    throw new Error(getCreateUserErrorMessage(error));
+    return { success: false, error: getCreateUserErrorMessage(error) };
   }
 };
-
-
 
 // Function to retrieve user data by user ID
 export const getUser = async (userId: string) => {
